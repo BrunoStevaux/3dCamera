@@ -85,7 +85,7 @@ socket.on('take-photo', function(data){
     lastReceiveTime = data.time
     takeId          = data.takeId;
     
-    takeImage();
+    takeImage(data.settings);
 });
 
 socket.on('update-software', function(data){
@@ -201,15 +201,12 @@ function sendImage(code) {
     });
 }
 
-function takeImage() {
-    var args = [
-        //'-w', 2592,   // width
-        //'-h', 1944,  // height
-        //'-t', 100,  // how long should taking the picture take?
-        '-q', 90,     // quality
-        '-awb', 'fluorescent', 
-        '-o', getAbsoluteImagePath()   // path + name
-    ];
+function takeImage(settings) {
+
+    var args = settings;
+    args.push(
+        '-o', getAbsoluteImagePath()
+        );   // path + name
     var imageProcess = spawn('raspistill', args);
     // The image should take about 5 seconds, if its going after 10 kill it!
     setTimeout(function(){ imageProcess.kill()}, 10000);
